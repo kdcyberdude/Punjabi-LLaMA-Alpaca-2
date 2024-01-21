@@ -7,14 +7,14 @@ lora_trainable="q_proj,v_proj,k_proj,o_proj,gate_proj,down_proj,up_proj"
 modules_to_save="embed_tokens,lm_head"
 lora_dropout=0.05
 
-pretrained_model=path/to/hf/llama-2/dir
-chinese_tokenizer_path=path/to/chinese-llama-2/tokenizer/dir
-dataset_dir=path/to/pt/data/dir
-data_cache=temp_data_cache_dir
-per_device_train_batch_size=1
-gradient_accumulation_steps=8
+pretrained_model=kdcyberdude/llama-2-7b-hf
+chinese_tokenizer_path=abhinand/tamil-llama-7b-base-v0.1
+dataset_dir=../../../data/datasets/tamil_2l/
+data_cache=../../../data/datasets/data_cache
+per_device_train_batch_size=64
+gradient_accumulation_steps=
 block_size=512
-output_dir=output_dir
+output_dir=../../../data/output/exp1
 
 deepspeed_config_file=ds_zero2_no_offload.json
 
@@ -28,7 +28,7 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_pt_with_peft.py \
     --per_device_train_batch_size ${per_device_train_batch_size} \
     --do_train \
     --seed $RANDOM \
-    --fp16 \
+    --bf16 \
     --num_train_epochs 1 \
     --lr_scheduler_type cosine \
     --learning_rate ${lr} \
@@ -51,8 +51,9 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_pt_with_peft.py \
     --trainable ${lora_trainable} \
     --lora_dropout ${lora_dropout} \
     --modules_to_save ${modules_to_save} \
-    --torch_dtype float16 \
+    --torch_dtype bfloat16 \
     --load_in_kbits 16 \
     --save_safetensors False \
     --gradient_checkpointing \
-    --ddp_find_unused_parameters False
+    --ddp_find_unused_parameters False \
+    --use_flash_attention_2 \
