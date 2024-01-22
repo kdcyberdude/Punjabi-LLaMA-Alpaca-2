@@ -10,7 +10,7 @@ conda activate hf2
 echo "Installing all the dependencies"
 
 pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu121
-pip install sentencepiece deepspeed datasets packaging
+pip install sentencepiece deepspeed datasets packaging scikit-learn accelerate trl bitsandbytes
 
 MAX_JOBS=4 pip install flash-attn --no-build-isolation
 conda install mpi4py -y
